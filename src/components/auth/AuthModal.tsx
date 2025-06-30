@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MapPin, Mail, Lock, User } from "lucide-react";
+import { Mail, Lock, User } from "lucide-react";
 import { toast } from "sonner";
 
 interface AuthModalProps {
@@ -48,8 +48,12 @@ export const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps)
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader className="text-center">
-          <div className="mx-auto w-12 h-12 bg-pascual-blue rounded-lg flex items-center justify-center mb-4">
-            <MapPin className="w-6 h-6 text-white" />
+          <div className="mx-auto w-16 h-12 flex items-center justify-center mb-4">
+            <img 
+              src="/lovable-uploads/e4c51655-b9bc-40f1-a5a3-e82d3081c0c2.png" 
+              alt="Pascual Logo" 
+              className="h-10 w-auto"
+            />
           </div>
           <DialogTitle className="text-2xl font-bold text-pascual-blue">
             Pascual Route Optimizer

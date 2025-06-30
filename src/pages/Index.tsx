@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MessageSquare, BarChart3, Users, TrendingUp, MapPin, Clock } from "lucide-react";
+import { MessageSquare, BarChart3, Users, TrendingUp, Clock } from "lucide-react";
 import { AuthModal } from "@/components/auth/AuthModal";
 import { ChatInterface } from "@/components/chat/ChatInterface";
 import { MetricsPanel } from "@/components/metrics/MetricsPanel";
@@ -34,10 +34,12 @@ const Index = () => {
       <header className="border-b bg-white/80 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-pascual-blue rounded-lg flex items-center justify-center">
-              <MapPin className="w-5 h-5 text-white" />
-            </div>
-            <h1 className="text-2xl font-bold text-pascual-blue">Pascual</h1>
+            <img 
+              src="/lovable-uploads/e4c51655-b9bc-40f1-a5a3-e82d3081c0c2.png" 
+              alt="Pascual Logo" 
+              className="h-8 w-auto"
+            />
+            <h1 className="text-2xl font-bold text-pascual-blue">Route Optimizer</h1>
           </div>
           <Button 
             onClick={() => setShowAuth(true)}
