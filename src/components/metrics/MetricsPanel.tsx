@@ -15,13 +15,13 @@ const METRICS_DATA = {
 };
 
 const COST_STRUCTURE = {
-  logisticCost: 10, // €/pedido
-  visitCost: 15, // €/visita
+  logisticCost: 10, // €/order
+  visitCost: 15, // €/visit
 };
 
 const CHANNEL_PERFORMANCE = {
-  hr: { name: "HR (Restaurantes/Bares)", efficiency: 0.72, volume: 65 },
-  hh: { name: "HH (Cadenas)", efficiency: 0.64, volume: 35 }
+  hr: { name: "HR (Restaurants/Bars)", efficiency: 0.72, volume: 65 },
+  hh: { name: "HH (Chains)", efficiency: 0.64, volume: 35 }
 };
 
 export const MetricsPanel = () => {
@@ -33,8 +33,8 @@ export const MetricsPanel = () => {
       <div className="space-y-4">
         {/* Header */}
         <div className="text-center">
-          <h3 className="font-semibold text-lg text-gray-900">Panel de Métricas</h3>
-          <p className="text-sm text-gray-600">Indicadores clave de optimización</p>
+          <h3 className="font-semibold text-lg text-gray-900">Metrics Panel</h3>
+          <p className="text-sm text-gray-600">Key optimization indicators</p>
         </div>
 
         <Separator />
@@ -43,7 +43,7 @@ export const MetricsPanel = () => {
         <div className="space-y-3">
           <h4 className="font-medium text-gray-900 flex items-center">
             <TrendingUp className="w-4 h-4 mr-2 text-pascual-blue" />
-            Métricas Principales
+            Main Metrics
           </h4>
 
           <Card className="glass-card">
@@ -60,7 +60,7 @@ export const MetricsPanel = () => {
                 </span>
                 <DollarSign className="w-4 h-4 text-gray-400" />
               </div>
-              <p className="text-xs text-gray-500 mt-1">Ingresos por pedido</p>
+              <p className="text-xs text-gray-500 mt-1">Revenue per order</p>
             </CardContent>
           </Card>
 
@@ -78,7 +78,7 @@ export const MetricsPanel = () => {
                 </span>
                 <Clock className="w-4 h-4 text-gray-400" />
               </div>
-              <p className="text-xs text-gray-500 mt-1">Pedidos por semana</p>
+              <p className="text-xs text-gray-500 mt-1">Orders per week</p>
             </CardContent>
           </Card>
 
@@ -96,7 +96,7 @@ export const MetricsPanel = () => {
                 </span>
                 <TrendingUp className="w-4 h-4 text-gray-400" />
               </div>
-              <p className="text-xs text-gray-500 mt-1">Pedidos/Contactos</p>
+              <p className="text-xs text-gray-500 mt-1">Orders/Contacts</p>
               <Progress value={METRICS_DATA.efficiency.value * 100} className="mt-2 h-1" />
             </CardContent>
           </Card>
@@ -108,7 +108,7 @@ export const MetricsPanel = () => {
         <div className="space-y-3">
           <h4 className="font-medium text-gray-900 flex items-center">
             <Users className="w-4 h-4 mr-2 text-pascual-blue" />
-            Rendimiento por Canal
+            Channel Performance
           </h4>
 
           <Card className="glass-card">
@@ -123,7 +123,7 @@ export const MetricsPanel = () => {
                       </Badge>
                     </div>
                     <Progress value={channel.efficiency * 100} className="h-1" />
-                    <p className="text-xs text-gray-500 mt-1">{channel.volume}% del volumen</p>
+                    <p className="text-xs text-gray-500 mt-1">{channel.volume}% of volume</p>
                   </div>
                 ))}
               </div>
@@ -137,22 +137,22 @@ export const MetricsPanel = () => {
         <div className="space-y-3">
           <h4 className="font-medium text-gray-900 flex items-center">
             <Package className="w-4 h-4 mr-2 text-pascual-blue" />
-            Estructura de Costos
+            Cost Structure
           </h4>
 
           <Card className="glass-card">
             <CardContent className="p-3">
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm">Costo Logístico</span>
+                  <span className="text-sm">Logistics Cost</span>
                   <Badge variant="outline" className="text-xs">
-                    {formatCurrency(COST_STRUCTURE.logisticCost)}/pedido
+                    {formatCurrency(COST_STRUCTURE.logisticCost)}/order
                   </Badge>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm">Costo Visita Promotor</span>
+                  <span className="text-sm">Visit Cost</span>
                   <Badge variant="outline" className="text-xs">
-                    {formatCurrency(COST_STRUCTURE.visitCost)}/visita
+                    {formatCurrency(COST_STRUCTURE.visitCost)}/visit
                   </Badge>
                 </div>
               </div>
@@ -166,7 +166,7 @@ export const MetricsPanel = () => {
         <div className="space-y-3">
           <h4 className="font-medium text-gray-900 flex items-center">
             <MapPin className="w-4 h-4 mr-2 text-pascual-blue" />
-            Métricas Adicionales
+            Additional Metrics
           </h4>
 
           <div className="grid grid-cols-2 gap-2">

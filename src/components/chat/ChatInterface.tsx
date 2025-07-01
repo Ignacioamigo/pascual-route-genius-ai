@@ -16,17 +16,17 @@ interface Message {
 }
 
 const SAMPLE_QUERIES = [
-  "Analiza la optimización del cliente 653025",
-  "¿Qué clientes tienen eficiencia baja?",
-  "Explica el ahorro estimado para el cliente X",
-  "Muestra clientes con median ticket < 80€"
+  "Analyze optimization for client 653025",
+  "Which clients have low efficiency?",
+  "Explain estimated savings for client X",
+  "Show clients with median ticket < €80"
 ];
 
 export const ChatInterface = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      content: "¡Hola! Soy tu asistente de optimización Pascual. ¿Sobre qué cliente o métrica te gustaría consultar? Puedo ayudarte con análisis de efficiency, median ticket, frequency, costos y más.",
+      content: "Hello! I'm your Pascual optimization assistant. What client or metric would you like to consult? I can help you with efficiency analysis, median ticket, frequency, costs and more.",
       sender: "ai",
       timestamp: new Date()
     }
@@ -53,7 +53,7 @@ export const ChatInterface = () => {
     setTimeout(() => {
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
-        content: `Analizando "${content}"...\n\nBasado en los datos de optimización Pascual:\n\n• **Efficiency**: Ratio pedidos/contactos actual\n• **Median Ticket**: €85.50 promedio\n• **Frequency**: 2.3 pedidos/semana\n• **Net Income**: Ingresos totales del cliente\n• **Costos**: 10€/pedido + 15€/visita\n\n¿Te gustaría profundizar en algún aspecto específico?`,
+        content: `Analyzing "${content}"...\n\nBased on Pascual optimization data:\n\n• **Efficiency**: Current orders/contacts ratio\n• **Median Ticket**: €85.50 average\n• **Frequency**: 2.3 orders/week\n• **Net Income**: Total client revenue\n• **Costs**: €10/order + €15/visit\n\nWould you like to dive deeper into any specific aspect?`,
         sender: "ai",
         timestamp: new Date()
       };
@@ -65,7 +65,7 @@ export const ChatInterface = () => {
 
   const handleCopy = (content: string) => {
     navigator.clipboard.writeText(content);
-    toast.success("Mensaje copiado al portapapeles");
+    toast.success("Message copied to clipboard");
   };
 
   return (
@@ -79,7 +79,7 @@ export const ChatInterface = () => {
             </div>
             <div>
               <h2 className="font-semibold">Pascual Route Optimizer</h2>
-              <p className="text-sm text-blue-100">Asistente IA para optimización</p>
+              <p className="text-sm text-blue-100">AI Assistant for optimization</p>
             </div>
           </div>
           <Button 
@@ -89,21 +89,21 @@ export const ChatInterface = () => {
             onClick={() => {
               setMessages([{
                 id: "1",
-                content: "¡Hola! Soy tu asistente de optimización Pascual. ¿Sobre qué cliente o métrica te gustaría consultar?",
+                content: "Hello! I'm your Pascual optimization assistant. What client or metric would you like to consult?",
                 sender: "ai",
                 timestamp: new Date()
               }]);
             }}
           >
             <Plus className="w-4 h-4 mr-1" />
-            Nueva Consulta
+            New Query
           </Button>
         </div>
       </div>
 
       {/* Quick Actions */}
       <div className="p-4 border-b bg-gray-50">
-        <p className="text-sm text-gray-600 mb-3">Consultas frecuentes:</p>
+        <p className="text-sm text-gray-600 mb-3">Frequent queries:</p>
         <div className="flex flex-wrap gap-2">
           {SAMPLE_QUERIES.map((query, index) => (
             <Badge
@@ -188,7 +188,7 @@ export const ChatInterface = () => {
           <Input
             value={currentMessage}
             onChange={(e) => setCurrentMessage(e.target.value)}
-            placeholder="Pregunta sobre un cliente, métrica o análisis..."
+            placeholder="Ask about a client, metric or analysis..."
             className="flex-1"
             disabled={isLoading}
           />

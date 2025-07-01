@@ -45,7 +45,7 @@ const Index = () => {
             onClick={() => setShowAuth(true)}
             className="bg-pascual-blue hover:bg-pascual-blue-dark"
           >
-            Acceder al Sistema
+            Access System
           </Button>
         </div>
       </header>
@@ -54,7 +54,7 @@ const Index = () => {
       <section className="container mx-auto px-4 py-16 text-center">
         <div className="max-w-4xl mx-auto">
           <Badge className="mb-6 bg-pascual-blue/10 text-pascual-blue border-pascual-blue/20" variant="outline">
-            Sistema de Optimización Inteligente
+            Intelligent Optimization System
           </Badge>
           
           <h1 className="text-5xl font-bold text-gray-900 mb-6 leading-tight">
@@ -63,8 +63,8 @@ const Index = () => {
           </h1>
           
           <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-            Sistema AI para optimizar contactos, frecuencias y rentabilidad en canales HR y HH.
-            Maximiza la eficiencia de tus rutas comerciales con inteligencia artificial avanzada.
+            AI system to optimize contacts, frequencies and profitability in HR and HH channels.
+            Maximize the efficiency of your commercial routes with advanced artificial intelligence.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -74,7 +74,7 @@ const Index = () => {
               onClick={() => setShowAuth(true)}
             >
               <MessageSquare className="mr-2 w-5 h-5" />
-              Comenzar Optimización
+              Start Optimization
             </Button>
             <Button 
               size="lg" 
@@ -82,7 +82,7 @@ const Index = () => {
               className="border-pascual-blue text-pascual-blue hover:bg-pascual-blue hover:text-white text-lg px-8 py-3"
             >
               <BarChart3 className="mr-2 w-5 h-5" />
-              Ver Demo
+              View Demo
             </Button>
           </div>
         </div>
@@ -92,10 +92,10 @@ const Index = () => {
       <section className="container mx-auto px-4 py-16">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Optimización Inteligente de Rutas
+            Intelligent Route Optimization
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Analiza y optimiza cada aspecto de tus operaciones comerciales con métricas clave y algoritmos avanzados
+            Analyze and optimize every aspect of your commercial operations with key metrics and advanced algorithms
           </p>
         </div>
 
@@ -105,9 +105,9 @@ const Index = () => {
               <div className="w-12 h-12 bg-pascual-blue/10 rounded-lg flex items-center justify-center mb-4 group-hover:bg-pascual-blue/20 transition-colors">
                 <Users className="w-6 h-6 text-pascual-blue" />
               </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">Análisis de Clientes</h3>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">Client Analysis</h3>
               <p className="text-gray-600 mb-4">
-                Evalúa efficiency, median ticket y frequency de cada cliente para optimizar contactos
+                Evaluate efficiency, median ticket and frequency of each client to optimize contacts
               </p>
               <Badge variant="secondary" className="bg-green-100 text-green-800">
                 HR & HH Channels
@@ -120,9 +120,9 @@ const Index = () => {
               <div className="w-12 h-12 bg-pascual-blue/10 rounded-lg flex items-center justify-center mb-4 group-hover:bg-pascual-blue/20 transition-colors">
                 <TrendingUp className="w-6 h-6 text-pascual-blue" />
               </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">Optimización de Costos</h3>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">Cost Optimization</h3>
               <p className="text-gray-600 mb-4">
-                Reduce costos logísticos (10€/pedido) y de visitas (15€/visita) maximizando ROI
+                Reduce logistics costs (€10/order) and visit costs (€15/visit) maximizing ROI
               </p>
               <Badge variant="secondary" className="bg-blue-100 text-blue-800">
                 AI Powered
@@ -135,9 +135,9 @@ const Index = () => {
               <div className="w-12 h-12 bg-pascual-blue/10 rounded-lg flex items-center justify-center mb-4 group-hover:bg-pascual-blue/20 transition-colors">
                 <Clock className="w-6 h-6 text-pascual-blue" />
               </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">Consultas en Tiempo Real</h3>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">Real-time Queries</h3>
               <p className="text-gray-600 mb-4">
-                Chat AI especializado para consultas instantáneas sobre clientes y métricas
+                Specialized AI chat for instant queries about clients and metrics
               </p>
               <Badge variant="secondary" className="bg-purple-100 text-purple-800">
                 Real-time
@@ -151,10 +151,10 @@ const Index = () => {
       <section className="bg-pascual-blue text-white py-16">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4">
-            ¿Listo para optimizar tus rutas?
+            Ready to optimize your routes?
           </h2>
           <p className="text-xl mb-8 text-blue-100">
-            Accede al sistema y comienza a maximizar la eficiencia de tus operaciones comerciales
+            Access the system and start maximizing the efficiency of your commercial operations
           </p>
           <Button 
             size="lg" 
@@ -162,7 +162,7 @@ const Index = () => {
             className="bg-white text-pascual-blue hover:bg-gray-100 text-lg px-8 py-3"
             onClick={() => setShowAuth(true)}
           >
-            Acceder Ahora
+            Access Now
           </Button>
         </div>
       </section>

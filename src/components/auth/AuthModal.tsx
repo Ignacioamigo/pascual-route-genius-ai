@@ -27,7 +27,7 @@ export const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps)
     // Simulate authentication
     setTimeout(() => {
       setIsLoading(false);
-      toast.success("¡Bienvenido al sistema Pascual!");
+      toast.success("Welcome to Pascual system!");
       onAuthSuccess();
     }, 1500);
   };
@@ -39,7 +39,7 @@ export const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps)
     // Simulate registration
     setTimeout(() => {
       setIsLoading(false);
-      toast.success("¡Cuenta creada exitosamente!");
+      toast.success("Account created successfully!");
       onAuthSuccess();
     }, 1500);
   };
@@ -62,8 +62,8 @@ export const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps)
 
         <Tabs defaultValue="login" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="login">Iniciar Sesión</TabsTrigger>
-            <TabsTrigger value="register">Registrarse</TabsTrigger>
+            <TabsTrigger value="login">Sign In</TabsTrigger>
+            <TabsTrigger value="register">Sign Up</TabsTrigger>
           </TabsList>
 
           <TabsContent value="login" className="space-y-4">
@@ -74,7 +74,7 @@ export const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps)
                   <Input
                     id="email"
                     type="email"
-                    placeholder="tu@pascual.com"
+                    placeholder="you@pascual.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="pl-10"
@@ -85,7 +85,7 @@ export const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps)
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Contraseña</Label>
+                <Label htmlFor="password">Password</Label>
                 <div className="relative">
                   <Input
                     id="password"
@@ -105,7 +105,7 @@ export const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps)
                 className="w-full bg-pascual-blue hover:bg-pascual-blue-dark"
                 disabled={isLoading}
               >
-                {isLoading ? "Accediendo..." : "Iniciar Sesión"}
+                {isLoading ? "Signing In..." : "Sign In"}
               </Button>
             </form>
           </TabsContent>
@@ -113,12 +113,12 @@ export const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps)
           <TabsContent value="register" className="space-y-4">
             <form onSubmit={handleRegister} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Nombre completo</Label>
+                <Label htmlFor="name">Full Name</Label>
                 <div className="relative">
                   <Input
                     id="name"
                     type="text"
-                    placeholder="Juan Pérez"
+                    placeholder="John Doe"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     className="pl-10"
@@ -134,7 +134,7 @@ export const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps)
                   <Input
                     id="register-email"
                     type="email"
-                    placeholder="tu@pascual.com"
+                    placeholder="you@pascual.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="pl-10"
@@ -145,7 +145,7 @@ export const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps)
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="register-password">Contraseña</Label>
+                <Label htmlFor="register-password">Password</Label>
                 <div className="relative">
                   <Input
                     id="register-password"
@@ -165,14 +165,14 @@ export const AuthModal = ({ open, onOpenChange, onAuthSuccess }: AuthModalProps)
                 className="w-full bg-pascual-blue hover:bg-pascual-blue-dark"
                 disabled={isLoading}
               >
-                {isLoading ? "Creando cuenta..." : "Crear Cuenta"}
+                {isLoading ? "Creating Account..." : "Create Account"}
               </Button>
             </form>
           </TabsContent>
         </Tabs>
 
         <div className="text-center text-sm text-gray-500 mt-4">
-          Sistema de optimización empresarial Pascual
+          Pascual enterprise optimization system
         </div>
       </DialogContent>
     </Dialog>
