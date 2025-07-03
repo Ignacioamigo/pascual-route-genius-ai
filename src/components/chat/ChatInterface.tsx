@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,18 +48,30 @@ export const ChatInterface = () => {
     setCurrentMessage("");
     setIsLoading(true);
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: content })
+      });
+      const data = await res.json();
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
-        content: `Analyzing "${content}"...\n\nBased on Pascual optimization data:\n\n• **Efficiency**: Current orders/contacts ratio\n• **Median Ticket**: €85.50 average\n• **Frequency**: 2.3 orders/week\n• **Net Income**: Total client revenue\n• **Costs**: €10/order + €15/visit\n\nWould you like to dive deeper into any specific aspect?`,
+        content: data.answer || 'No response from Gemini',
         sender: "ai",
         timestamp: new Date()
       };
-      
       setMessages(prev => [...prev, aiResponse]);
+    } catch (error) {
+      setMessages(prev => [...prev, {
+        id: (Date.now() + 2).toString(),
+        content: 'Error contacting Gemini API',
+        sender: "ai",
+        timestamp: new Date()
+      }]);
+    } finally {
       setIsLoading(false);
-    }, 2000);
+    }
   };
 
   const handleCopy = (content: string) => {

@@ -1,0 +1,15 @@
+const fs = require('fs');
+const texto = `
+client_id: 100006690
+city: Madrid
+channel: AR
+total_orders: 22
+total_volume: 1658.706
+total_income: 1494.53
+median_ticket_year: 60.99
+total_promotor_visits: 44
+total_promotor_calls: 0
+client_frequency: 2
+`.trim();
+fs.writeFileSync('cliente_100006690.txt', texto);
+console.log('Archivo cliente_100006690.txt creado.'); 

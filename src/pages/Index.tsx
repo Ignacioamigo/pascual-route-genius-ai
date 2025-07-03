@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,10 +6,12 @@ import { MessageSquare, BarChart3, Users, TrendingUp, Clock } from "lucide-react
 import { AuthModal } from "@/components/auth/AuthModal";
 import { ChatInterface } from "@/components/chat/ChatInterface";
 import { MetricsPanel } from "@/components/metrics/MetricsPanel";
+import { useClients } from '@/hooks/useClients';
 
 const Index = () => {
   const [showAuth, setShowAuth] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { data: clients, isLoading, error } = useClients();
 
   const handleAuthSuccess = () => {
     setIsAuthenticated(true);
@@ -86,6 +87,22 @@ const Index = () => {
             </Button>
           </div>
         </div>
+      </section>
+
+      {/* Lista de clientes */}
+      <section className="container mx-auto px-4 py-8">
+        <h2 className="text-2xl font-bold mb-4">Clientes (primeros 10)</h2>
+        {isLoading && <p>Cargando...</p>}
+        {error && <p>Error al cargar los clientes</p>}
+        {clients && (
+          <ul className="space-y-2">
+            {clients.map((client: any) => (
+              <li key={client.client_id} className="border p-2 rounded">
+                <strong>{client.client_id}</strong> - {client.city} - {client.channel}
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
       {/* Features Grid */}
