@@ -1,25 +1,15 @@
-import 'dotenv/config';
-import { Client } from 'pg';
+// Eliminar la importación global de 'pg'
 
-const connectionString = process.env.SUPABASE_DB_URL as string;
+import { Pool } from 'pg';
 
-let isConnected = false;
-export const client = new Client({
-  connectionString,
-  ssl: { rejectUnauthorized: false }
+export const db = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false },
 });
-
-export async function connectDB() {
-  if (!isConnected) {
-    await client.connect();
-    isConnected = true;
-  }
-}
 
 export async function getClients() {
   try {
-    await connectDB();
-    const res = await client.query('SELECT * FROM client_summary LIMIT 10');
+    const res = await db.query('SELECT * FROM client_summary LIMIT 10');
     return res.rows;
   } catch (err) {
     console.error("Error real en getClients:", err);
@@ -27,30 +17,40 @@ export async function getClients() {
   }
 }
 
-export async function getClientById(clientId: string) {
-  // Cliente inventado para prueba
-  return {
-    client_id: '123',
-    city: 'CiudadEjemplo',
-    channel: 'Test',
-    promotor_id: '999999999',
-    total_orders: 42,
-    total_volume: 1234.56,
-    total_income: 7890.12,
-    median_ticket_year: 99.99,
-    total_promotor_visits: 10,
-    total_promotor_calls: 5,
-    client_frequency: 3
-  };
+export async function getClientById(clientId) {
+  try {
+    const res = await db.query('SELECT * FROM client_summary WHERE client_id = $1 LIMIT 1', [clientId]);
+    if (res.rows.length > 0) {
+      return res.rows[0];
+    } else {
+      return null;
+    }
+  } catch (err) {
+    console.error('Error real en getClientById:', err);
+    throw err;
+  }
 }
 
-// Función de prueba para verificar la conexión
+// --- INICIO BLOQUE COMPATIBLE CON NODE ---
 if (require.main === module) {
-  getClients().then((clients) => {
-    console.log('Clientes:', clients);
-    process.exit(0);
-  }).catch((err) => {
-    console.error('Error al conectar o consultar:', err);
-    process.exit(1);
+  // Solo cargar dotenv y pg con require si se ejecuta directamente
+  require('dotenv').config();
+  const { Client } = require('pg');
+  const connectionString = process.env.SUPABASE_DB_URL;
+  const client = new Client({
+    connectionString,
+    ssl: { rejectUnauthorized: false }
   });
-} 
+  client.connect()
+    .then(() => client.query('SELECT * FROM client_summary LIMIT 10'))
+    .then((res) => {
+      console.log('Clientes:', res.rows);
+      return client.end();
+    })
+    .then(() => process.exit(0))
+    .catch((err) => {
+      console.error('Error al conectar o consultar:', err);
+      process.exit(1);
+    });
+}
+// --- FIN BLOQUE COMPATIBLE CON NODE --- 

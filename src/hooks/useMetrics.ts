@@ -1,0 +1,62 @@
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+
+export interface MetricsData {
+  median_ticket: number;
+  order_frequency: number;
+  total_income: number;
+  visit_cost: number;
+  logistics_cost: number;
+  profit: number;
+  roi_percent: number;
+  channel_share: Array<{ channel: string; percentage: number; }>;
+  top_cities: Array<{ city: string; profit: number; }>;
+}
+
+interface UseMetricsResult {
+  metrics: MetricsData | null;
+  loading: boolean;
+  error: string | null;
+  refetch: () => void;
+}
+
+export const useMetrics = (clientId?: string): UseMetricsResult => {
+  const [metrics, setMetrics] = useState<MetricsData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchMetrics = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const url = clientId 
+        ? `/api/metrics?clientId=${clientId}`
+        : '/api/metrics';
+      
+      const response = await axios.get(url);
+      
+      if (response.data.success) {
+        setMetrics(response.data.data);
+      } else {
+        setError(response.data.error || 'Error fetching metrics');
+      }
+    } catch (err) {
+      console.error('Error fetching metrics:', err);
+      setError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMetrics();
+  }, [clientId]);
+
+  return {
+    metrics,
+    loading,
+    error,
+    refetch: fetchMetrics
+  };
+}; 
