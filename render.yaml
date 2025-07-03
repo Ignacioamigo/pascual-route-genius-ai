@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: pascual-backend
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build:server
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5050
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: SUPABASE_DB_URL
+        sync: false
+      - key: VISIT_COST
+        value: 15
+      - key: LOGISTICS_COST
+        value: 10 
