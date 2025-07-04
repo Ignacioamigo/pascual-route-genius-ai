@@ -1,3 +1,4 @@
+
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
@@ -10,9 +11,10 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
     proxy: {
       '/api': {
-        target: process.env.VITE_API_URL || 'http://localhost:5050',
+        target: 'https://pascual-route-genius-ai.onrender.com',
         changeOrigin: true,
-        secure: false
+        secure: true,
+        rewrite: (path) => path
       },
     },
   },

@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Send, MessageSquare, Plus, User, Bot, Copy } from "lucide-react";
 import { toast } from "sonner";
+import { createApiUrl } from "@/lib/api";
 
 interface Message {
   id: string;
@@ -49,7 +50,7 @@ export const ChatInterface = () => {
     setIsLoading(true);
 
     try {
-      const res = await fetch('/api/chat', {
+      const res = await fetch(createApiUrl('/api/chat'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: content })
@@ -57,7 +58,7 @@ export const ChatInterface = () => {
       const data = await res.json();
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
-        content: data.answer || 'No response from Gemini',
+        content: data.answer || 'No response from assistant',
         sender: "ai",
         timestamp: new Date()
       };
@@ -65,7 +66,7 @@ export const ChatInterface = () => {
     } catch (error) {
       setMessages(prev => [...prev, {
         id: (Date.now() + 2).toString(),
-        content: 'Error contacting Gemini API',
+        content: 'Error contacting the assistant API',
         sender: "ai",
         timestamp: new Date()
       }]);

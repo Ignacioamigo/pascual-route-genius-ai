@@ -1,5 +1,7 @@
+
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { createApiUrl } from '@/lib/api';
 
 export interface MetricsData {
   median_ticket: number;
@@ -30,10 +32,11 @@ export const useMetrics = (clientId?: string): UseMetricsResult => {
       setLoading(true);
       setError(null);
       
-      const url = clientId 
+      const endpoint = clientId 
         ? `/api/metrics?clientId=${clientId}`
         : '/api/metrics';
       
+      const url = createApiUrl(endpoint);
       const response = await axios.get(url);
       
       if (response.data.success) {
@@ -59,4 +62,4 @@ export const useMetrics = (clientId?: string): UseMetricsResult => {
     error,
     refetch: fetchMetrics
   };
-}; 
+};
