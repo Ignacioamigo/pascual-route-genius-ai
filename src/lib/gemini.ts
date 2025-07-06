@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { getClusterStrategy, ClusterStrategy } from "./cluster-strategies";
 
 const apiKey = process.env.GEMINI_API_KEY as string;
 export const genAI = new GoogleGenerativeAI(apiKey);
@@ -18,14 +19,15 @@ interface PascualContext {
   clientData?: any;
   metrics?: any;
   additionalData?: string;
+  clusterStrategy?: ClusterStrategy;
 }
 
 function buildProfessionalPrompt(message: string, context: PascualContext): string {
   const timestamp = new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC';
   
-  // Contexto básico
+  // Build context with optimization data
   let contextData = "{}";
-  if (context.clientData || context.metrics || context.additionalData) {
+  if (context.clientData || context.metrics || context.additionalData || context.clusterStrategy) {
     const contextObj: any = {};
     
     if (context.clientData) {
@@ -40,6 +42,10 @@ function buildProfessionalPrompt(message: string, context: PascualContext): stri
       contextObj.additional = context.additionalData;
     }
     
+    if (context.clusterStrategy) {
+      contextObj.clusterStrategy = context.clusterStrategy;
+    }
+    
     contextData = JSON.stringify(contextObj, null, 2);
   }
 
@@ -52,36 +58,37 @@ You are "Pascual Route Optimisation Assistant".
 • Base your answer **exclusively** on <Context>.
 • If the user asks something unrelated to commercial-routing data, reply: "Sorry for the inconvenience, I can only answer questions related to clients and metrics about Pascual."
 • If required data is missing, say so—do NOT invent figures.
+• Ignore any field whose value is "N/A" or null.
+• Answer in ≤1200 characters. Plain text only + emojis.
 
 ### Response Format for Client Queries:
 When analyzing a specific client, use this EXACT format with emojis (NO markdown formatting):
 
 🔍 CLIENT OVERVIEW – ID: [client_id]
-📍 Location: [city]
-🔗 Channel: [channel]
-🧾 Orders: [total_orders] total
-📦 Volume: [total_volume] units
-💰 Total income: €[total_income]
-🎟️ Median ticket: €[median_ticket]
-📞 Contacted via: [total_promotor_calls] calls · [total_promotor_visits] visits
-📈 Order frequency: [client_frequency] orders/week
-💸 Visit cost: €[visit_cost]
-🚚 Logistics cost: €[logistics_cost]
-📊 Profit: €[profit]
-📈 ROI: [roi_percent]%
+📍 Location: [city] · [channel]
+🧾 Orders: [total_orders] · Median ticket €[median_ticket_year]
+📞 Visits: [avg_visits_per_month]/mo · Gap [visit_order_gap]
+💰 Income: €[total_income] · Opportunity cost: €[opportunity_cost]/mo
 
-📊 PERFORMANCE SUMMARY
-💡 Analyze based on SPECIFIC metrics:
-- Moderate performance (ROI 50-100%)
-- Moderate engagement (order_frequency 1-2)
+🗂️ CLUSTER STRATEGY
+🏷️ Cluster: [clusterStrategy.label]
+📝 Profile: [clusterStrategy.description]
+🎯 Tactic: [clusterStrategy.tactic]
+🔎 Reason: [clusterStrategy.reason]
+🎯 Target gap: [clusterStrategy.targetGap]
+⚠️ Risk note: [clusterStrategy.riskNote]
 
-🎯 Contact strategy analysis:
-- The client was contacted exclusively through [X] visits, with no calls registered. The cost-effectiveness of this strategy should be reviewed considering the high number of visits (€[visit_cost]) relative to the total profit (€[profit]) and logistics costs (€[logistics_cost]).
+🛠️ OPTIMISATION PLAN
+🎯 Visits removed: [visits_removed]/mo → New visits: [calculated new visits]
+💸 Saving: €[estimated_savings]/mo (≈ €[annual_estimated_savings]/yr)
+✅ New efficiency: [target_gap] gap
 
-📈 Specific insight based on actual profit margin and ROI numbers:
-While the ROI of [roi_percent]% indicates moderate performance, the high visit cost relative to profit suggests a potential for improvement in contact strategy efficiency. Further analysis should focus on optimizing the number of visits needed to maintain or increase engagement.
-
-CRITICAL: Use plain text only, NO markdown formatting (**bold**, *italic*, etc.). Use only emojis and plain text.
+CRITICAL: 
+- Use plain text only, NO markdown formatting (**bold**, *italic*, etc.). Use only emojis and plain text.
+- If clusterStrategy or optimization data is missing/N/A, skip the corresponding section.
+- Calculate new visits by subtracting visits_removed from avg_visits_per_month.
+- If any key optimization fields are missing, only show CLIENT OVERVIEW section.
+- Replace [visit_order_gap] with actual gap value or calculate from data.
 
 ### For General Questions:
 Provide clear, professional responses without the client format.

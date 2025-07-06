@@ -5,6 +5,7 @@ console.log('EXPRESS IMPORTADO');
 import { db, getClients, getClientById } from './lib/db';
 console.log('DB IMPORTADO');
 import { askPascualAssistant, type PascualContext } from './lib/gemini';
+import { getClusterStrategy } from './lib/cluster-strategies';
 console.log('GEMINI IMPORTADO');
 import metricsRouter from './routes/metrics';
 import { getClientMetrics } from './services/metrics';
@@ -94,6 +95,12 @@ app.post('/api/chat', async (req, res) => {
     if (clientData) {
       context.clientData = clientData;
       console.log('✅ Datos de cliente encontrados:', clientData.client_id);
+      
+      // Agregar estrategia del cluster basada en los datos del cliente
+      const clusterName = clientData.cluster_name || clientData.class || null;
+      const clusterStrategy = getClusterStrategy(clusterName);
+      context.clusterStrategy = clusterStrategy;
+      console.log('✅ Estrategia de cluster aplicada:', clusterStrategy.label);
     }
     
     if (metrics) {
@@ -113,6 +120,8 @@ app.post('/api/chat', async (req, res) => {
       clientId: extractedClientId, 
       hasClientData: !!clientData, 
       hasMetrics: !!metrics,
+      hasClusterStrategy: !!context.clusterStrategy,
+      clusterName: clientData?.cluster_name || clientData?.class,
       userIntent
     }, { depth: null });
 
@@ -123,7 +132,9 @@ app.post('/api/chat', async (req, res) => {
       answer,
       clientId: extractedClientId,
       hasClientData: !!clientData,
-      hasMetrics: !!metrics
+      hasMetrics: !!metrics,
+      hasClusterStrategy: !!context.clusterStrategy,
+      clusterLabel: context.clusterStrategy?.label
     });
     
   } catch (err) {
