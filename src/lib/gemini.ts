@@ -22,6 +22,26 @@ interface PascualContext {
   clusterStrategy?: ClusterStrategy;
 }
 
+function sanitizeValues(obj: any): any {
+  if (obj === null || obj === undefined) {
+    return "N/A";
+  }
+  
+  if (typeof obj === 'object' && obj !== null) {
+    const sanitized: any = {};
+    for (const [key, value] of Object.entries(obj)) {
+      if (key === 'opportunity_cost' && (value === null || value === undefined)) {
+        sanitized[key] = "N/A";
+      } else {
+        sanitized[key] = sanitizeValues(value);
+      }
+    }
+    return sanitized;
+  }
+  
+  return obj;
+}
+
 function buildProfessionalPrompt(message: string, context: PascualContext): string {
   const timestamp = new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC';
   
@@ -31,11 +51,11 @@ function buildProfessionalPrompt(message: string, context: PascualContext): stri
     const contextObj: any = {};
     
     if (context.clientData) {
-      contextObj.client = context.clientData;
+      contextObj.client = sanitizeValues(context.clientData);
     }
     
     if (context.metrics) {
-      contextObj.metrics = context.metrics;
+      contextObj.metrics = sanitizeValues(context.metrics);
     }
     
     if (context.additionalData) {
@@ -67,25 +87,26 @@ When analyzing a specific client, use this EXACT format with emojis (NO markdown
 🔍 CLIENT OVERVIEW – ID: [client_id]
 📍 Location: [city] · [channel]
 🧾 Orders: [total_orders] · Median ticket €[median_ticket_year]
-📞 Visits: [avg_visits_per_month]/mo · Gap [visit_order_gap]
-💰 Income: €[total_income] · Opportunity cost: €[opportunity_cost]/mo
+📞 Promotor visits: [avg_visits_per_month]/mo · Gap [visit_order_gap]
+💰 Income: €[total_income] · Opportunity cost: €[opportunity_cost or "N/A"]/mo
 
 🗂️ CLUSTER STRATEGY
 🏷️ Cluster: [clusterStrategy.label]
 📝 Profile: [clusterStrategy.description]
 🎯 Tactic: [clusterStrategy.tactic]
 🔎 Reason: [clusterStrategy.reason]
-🎯 Target gap: [clusterStrategy.targetGap]
 ⚠️ Risk note: [clusterStrategy.riskNote]
 
 🛠️ OPTIMISATION PLAN
 🎯 Visits removed: [visits_removed]/mo → New visits: [calculated new visits]
 💸 Saving: €[estimated_savings]/mo (≈ €[annual_estimated_savings]/yr)
-✅ New efficiency: [target_gap] gap
+✅ New efficiency: Optimized visit frequency
 
 CRITICAL: 
 - Use plain text only, NO markdown formatting (**bold**, *italic*, etc.). Use only emojis and plain text.
 - If clusterStrategy or optimization data is missing/N/A, skip the corresponding section.
+- Replace null values with "N/A" or omit the field entirely if it doesn't add value.
+- For opportunity_cost: if null, show "N/A" instead of "null".
 - Calculate new visits by subtracting visits_removed from avg_visits_per_month.
 - If any key optimization fields are missing, only show CLIENT OVERVIEW section.
 - Replace [visit_order_gap] with actual gap value or calculate from data.

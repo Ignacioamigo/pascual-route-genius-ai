@@ -12,8 +12,11 @@ export interface ClientMetrics {
   logistics_cost: number;
   profit: number;
   roi_percent: number;
+  potential_savings: number;
   channel_share: Array<{ channel: string; percentage: number; }>;
   top_cities: Array<{ city: string; profit: number; }>;
+  top_savings_cities: Array<{ city: string; savings: number; }>;
+  top_income_cities: Array<{ city: string; income: number; }>;
 }
 
 export async function getClientMetrics(clientId: string): Promise<ClientMetrics> {
@@ -57,6 +60,21 @@ export async function getClientMetrics(clientId: string): Promise<ClientMetrics>
       profit: client.profit_calculated || 0
     }];
     
+    // Calcular potential savings para un cliente individual (anual)
+    const potentialSavings = parseFloat(client.annual_estimated_savings || (client.estimated_savings || '0') * 12 || '0');
+    
+    // Para un cliente individual, top_savings_cities solo mostrará su ciudad
+    const topSavingsCities = [{
+      city: client.city || 'Unknown',
+      savings: potentialSavings
+    }];
+    
+    // Para un cliente individual, top_income_cities solo mostrará su ciudad
+    const topIncomeCities = [{
+      city: client.city || 'Unknown',
+      income: parseFloat(client.total_income || '0')
+    }];
+    
     return {
       median_ticket: parseFloat(client.median_ticket_year || '0'),
       order_frequency: orderFrequency,
@@ -65,8 +83,11 @@ export async function getClientMetrics(clientId: string): Promise<ClientMetrics>
       logistics_cost: parseFloat(client.logistics_cost_calculated || '0'),
       profit: parseFloat(client.profit_calculated || '0'),
       roi_percent: parseFloat(client.roi_calculated || '0'),
+      potential_savings: potentialSavings,
       channel_share: channelShare,
-      top_cities: topCities
+      top_cities: topCities,
+      top_savings_cities: topSavingsCities,
+      top_income_cities: topIncomeCities
     };
     
   } catch (error) {
@@ -139,6 +160,65 @@ export async function getGlobalMetrics(): Promise<ClientMetrics> {
       profit: parseFloat(row.city_profit || '0')
     }));
     
+    // Calcular potential savings globales (suma anual de estimated_savings*12 o annual_estimated_savings)
+    const savingsQuery = `
+      SELECT SUM(
+        COALESCE(
+          CAST(annual_estimated_savings AS NUMERIC),
+          CAST(estimated_savings AS NUMERIC) * 12,
+          0
+        )
+      ) as total_potential_savings
+      FROM client_summary
+      WHERE estimated_savings IS NOT NULL OR annual_estimated_savings IS NOT NULL
+    `;
+    
+    const savingsResult = await db.query(savingsQuery);
+    const totalPotentialSavings = parseFloat(savingsResult.rows[0]?.total_potential_savings || '0');
+    
+    // Obtener top 3 ciudades por potential savings (anual)
+    const savingsCitiesQuery = `
+      SELECT 
+        city,
+        SUM(
+          COALESCE(
+            CAST(annual_estimated_savings AS NUMERIC),
+            CAST(estimated_savings AS NUMERIC) * 12,
+            0
+          )
+        ) as city_savings
+      FROM client_summary 
+      WHERE city IS NOT NULL 
+        AND (estimated_savings IS NOT NULL OR annual_estimated_savings IS NOT NULL)
+      GROUP BY city
+      ORDER BY city_savings DESC
+      LIMIT 3
+    `;
+    
+    const savingsCitiesResult = await db.query(savingsCitiesQuery);
+    const topSavingsCities = savingsCitiesResult.rows.map(row => ({
+      city: row.city,
+      savings: parseFloat(row.city_savings || '0')
+    }));
+    
+    // Obtener top 3 ciudades por ingresos totales
+    const incomeCitiesQuery = `
+      SELECT 
+        city,
+        SUM(CAST(total_income AS NUMERIC)) as city_income
+      FROM client_summary 
+      WHERE city IS NOT NULL
+      GROUP BY city
+      ORDER BY city_income DESC
+      LIMIT 3
+    `;
+    
+    const incomeCitiesResult = await db.query(incomeCitiesQuery);
+    const topIncomeCities = incomeCitiesResult.rows.map(row => ({
+      city: row.city,
+      income: parseFloat(row.city_income || '0')
+    }));
+    
     return {
       median_ticket: parseFloat(global.avg_median_ticket || '0'),
       order_frequency: parseFloat(global.total_order_frequency || '0'),
@@ -147,8 +227,11 @@ export async function getGlobalMetrics(): Promise<ClientMetrics> {
       logistics_cost: parseFloat(global.total_logistics_cost || '0'),
       profit: parseFloat(global.total_profit || '0'),
       roi_percent: parseFloat(global.roi_percent || '0'),
+      potential_savings: totalPotentialSavings,
       channel_share: channelShare,
-      top_cities: topCities
+      top_cities: topCities,
+      top_savings_cities: topSavingsCities,
+      top_income_cities: topIncomeCities
     };
     
   } catch (error) {

@@ -114,22 +114,7 @@ export const ChatInterface = () => {
         </div>
       </div>
 
-      {/* Quick Actions */}
-      <div className="p-4 border-b bg-gray-50">
-        <p className="text-sm text-gray-600 mb-3">Frequent queries:</p>
-        <div className="flex flex-wrap gap-2">
-          {SAMPLE_QUERIES.map((query, index) => (
-            <Badge
-              key={index}
-              variant="outline"
-              className="cursor-pointer hover:bg-pascual-blue hover:text-white hover:border-pascual-blue transition-colors"
-              onClick={() => handleSendMessage(query)}
-            >
-              {query}
-            </Badge>
-          ))}
-        </div>
-      </div>
+
 
       {/* Messages */}
       <ScrollArea className="flex-1 p-4 custom-scrollbar">
@@ -201,7 +186,7 @@ export const ChatInterface = () => {
           <Input
             value={currentMessage}
             onChange={(e) => setCurrentMessage(e.target.value)}
-            placeholder="Pregunta sobre rendimiento, métricas, ROI, o simplemente menciona un número de cliente..."
+            placeholder="Ask me anything..."
             className="flex-1"
             disabled={isLoading}
           />

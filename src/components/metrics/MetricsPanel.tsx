@@ -127,18 +127,7 @@ export const MetricsPanel = ({ clientId }: MetricsPanelProps) => {
             </CardContent>
           </Card>
 
-          <Card className="glass-card">
-            <CardContent className="p-3">
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-sm font-medium">Current Profit</span>
-                <Target className="w-4 h-4 text-gray-400" />
-              </div>
-              <div className={`text-xl font-bold ${metrics.profit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {formatCurrency(metrics.profit)}
-              </div>
-              <p className="text-xs text-gray-500 mt-1">Income - Costs</p>
-            </CardContent>
-          </Card>
+
         </div>
 
         <Separator />
@@ -166,19 +155,17 @@ export const MetricsPanel = ({ clientId }: MetricsPanelProps) => {
           <Card className="glass-card">
             <CardContent className="p-3">
               <div className="flex justify-between items-center mb-1">
-                <span className="text-sm font-medium">ROI</span>
+                <span className="text-sm font-medium">Potential Savings</span>
                 <TrendingUp className="w-4 h-4 text-gray-400" />
               </div>
-              <div className={`text-xl font-bold ${metrics.roi_percent >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {formatPercentage(metrics.roi_percent)}
+              <div className="text-xl font-bold text-green-600">
+                {formatCurrency(metrics.potential_savings || 0)}
               </div>
-              <p className="text-xs text-gray-500 mt-1">Return on Investment</p>
-              <Progress 
-                value={Math.max(0, Math.min(100, metrics.roi_percent + 50))} 
-                className="mt-2 h-1" 
-              />
+              <p className="text-xs text-gray-500 mt-1">Annual savings potential</p>
             </CardContent>
           </Card>
+
+
         </div>
 
         <Separator />
@@ -245,27 +232,71 @@ export const MetricsPanel = ({ clientId }: MetricsPanelProps) => {
           </div>
         )}
 
-        {/* Top Cities */}
-        {metrics.top_cities && metrics.top_cities.length > 0 && (
+        {/* Top Cities by Potential Savings */}
+        {metrics.top_savings_cities && metrics.top_savings_cities.length > 0 && (
           <div className="space-y-3">
             <h4 className="font-medium text-gray-900 flex items-center">
               <MapPin className="w-4 h-4 mr-2 text-pascual-blue" />
-              Top Cities by Profit
+              Top Cities by Potential Savings
             </h4>
 
             <Card className="glass-card">
               <CardContent className="p-3">
                 <div className="space-y-2">
-                  {metrics.top_cities.map((city, index) => (
+                  {metrics.top_savings_cities.map((city, index) => (
                     <div key={index} className="flex justify-between items-center">
                       <div className="flex items-center">
-                        <Badge variant="secondary" className="w-6 h-6 text-xs p-0 flex items-center justify-center mr-2">
+                        <Badge 
+                          variant="secondary" 
+                          className={`w-6 h-6 text-xs p-0 flex items-center justify-center mr-2 ${
+                            index === 0 ? 'bg-yellow-100 text-yellow-800' : 
+                            index === 1 ? 'bg-gray-100 text-gray-800' : 
+                            'bg-orange-100 text-orange-800'
+                          }`}
+                        >
                           {index + 1}
                         </Badge>
                         <span className="text-sm font-medium">{city.city}</span>
                       </div>
-                      <span className={`text-sm font-bold ${city.profit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                        {formatCurrency(city.profit)}
+                      <span className="text-sm font-bold text-green-600">
+                        {formatCurrency(city.savings)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Top Cities by Income */}
+        {metrics.top_income_cities && metrics.top_income_cities.length > 0 && (
+          <div className="space-y-3">
+            <h4 className="font-medium text-gray-900 flex items-center">
+              <DollarSign className="w-4 h-4 mr-2 text-pascual-blue" />
+              Top Cities by Income
+            </h4>
+
+            <Card className="glass-card">
+              <CardContent className="p-3">
+                <div className="space-y-2">
+                  {metrics.top_income_cities.map((city, index) => (
+                    <div key={index} className="flex justify-between items-center">
+                      <div className="flex items-center">
+                        <Badge 
+                          variant="secondary" 
+                          className={`w-6 h-6 text-xs p-0 flex items-center justify-center mr-2 ${
+                            index === 0 ? 'bg-green-100 text-green-800' : 
+                            index === 1 ? 'bg-blue-100 text-blue-800' : 
+                            'bg-purple-100 text-purple-800'
+                          }`}
+                        >
+                          {index + 1}
+                        </Badge>
+                        <span className="text-sm font-medium">{city.city}</span>
+                      </div>
+                      <span className="text-sm font-bold text-green-600">
+                        {formatCurrency(city.income)}
                       </span>
                     </div>
                   ))}

@@ -11,8 +11,11 @@ export interface MetricsData {
   logistics_cost: number;
   profit: number;
   roi_percent: number;
+  potential_savings: number;
   channel_share: Array<{ channel: string; percentage: number; }>;
   top_cities: Array<{ city: string; profit: number; }>;
+  top_savings_cities: Array<{ city: string; savings: number; }>;
+  top_income_cities: Array<{ city: string; income: number; }>;
 }
 
 interface UseMetricsResult {
