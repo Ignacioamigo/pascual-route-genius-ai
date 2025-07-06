@@ -132,44 +132,6 @@ export const MetricsPanel = ({ clientId }: MetricsPanelProps) => {
 
         <Separator />
 
-        {/* Operational Metrics */}
-        <div className="space-y-3">
-          <h4 className="font-medium text-gray-900 flex items-center">
-            <BarChart3 className="w-4 h-4 mr-2 text-pascual-blue" />
-            Operations
-          </h4>
-
-          <Card className="glass-card">
-            <CardContent className="p-3">
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-sm font-medium">Order Frequency</span>
-                <Clock className="w-4 h-4 text-gray-400" />
-              </div>
-              <div className="text-xl font-bold text-pascual-blue">
-                {formatNumber(metrics.order_frequency)}
-              </div>
-              <p className="text-xs text-gray-500 mt-1">Orders per week</p>
-            </CardContent>
-          </Card>
-
-          <Card className="glass-card">
-            <CardContent className="p-3">
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-sm font-medium">Potential Savings</span>
-                <TrendingUp className="w-4 h-4 text-gray-400" />
-              </div>
-              <div className="text-xl font-bold text-green-600">
-                {formatCurrency(metrics.potential_savings || 0)}
-              </div>
-              <p className="text-xs text-gray-500 mt-1">Annual savings potential</p>
-            </CardContent>
-          </Card>
-
-
-        </div>
-
-        <Separator />
-
         {/* Cost Structure */}
         <div className="space-y-3">
           <h4 className="font-medium text-gray-900 flex items-center">
@@ -200,6 +162,29 @@ export const MetricsPanel = ({ clientId }: MetricsPanelProps) => {
               </CardContent>
             </Card>
           </div>
+        </div>
+
+        <Separator />
+
+        {/* Potential Savings */}
+        <div className="space-y-3">
+          <h4 className="font-medium text-gray-900 flex items-center">
+            <TrendingUp className="w-4 h-4 mr-2 text-pascual-blue" />
+            Optimization Potential
+          </h4>
+
+          <Card className="glass-card">
+            <CardContent className="p-3">
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-sm font-medium">Potential Savings</span>
+                <TrendingUp className="w-4 h-4 text-gray-400" />
+              </div>
+              <div className="text-xl font-bold text-green-600">
+                {formatCurrency(metrics.potential_savings || 0)}
+              </div>
+              <p className="text-xs text-gray-500 mt-1">Annual savings potential</p>
+            </CardContent>
+          </Card>
         </div>
 
         <Separator />
