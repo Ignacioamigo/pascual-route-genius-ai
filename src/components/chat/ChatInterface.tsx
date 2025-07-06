@@ -27,7 +27,7 @@ export const ChatInterface = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      content: "¡Hola! Soy tu asistente de optimización de Pascual. Puedo ayudarte a analizar el rendimiento de clientes, métricas de eficiencia, ROI, frecuencia de pedidos y oportunidades de optimización. Solo menciona un número de cliente o pregunta sobre métricas específicas.",
+      content: "Hello! I'm your Pascual optimization assistant. I can help you analyze client performance, efficiency metrics, order frequency and optimization opportunities. Just mention a client number or ask about metrics.",
       sender: "ai",
       timestamp: new Date()
     }
@@ -102,7 +102,7 @@ export const ChatInterface = () => {
             onClick={() => {
               setMessages([{
                 id: "1",
-                content: "¡Hola! Soy tu asistente de optimización de Pascual. Puedo ayudarte a analizar el rendimiento de clientes, métricas de eficiencia, ROI, frecuencia de pedidos y oportunidades de optimización. Solo menciona un número de cliente o pregunta sobre métricas específicas.",
+                content: "Hello! I'm your Pascual optimization assistant. I can help you analyze client performance, efficiency metrics, order frequency and optimization opportunities. Just mention a client number or ask about metrics.",
                 sender: "ai",
                 timestamp: new Date()
               }]);
