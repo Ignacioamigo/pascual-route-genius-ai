@@ -64,7 +64,7 @@ const Index = () => {
           </h1>
           
           <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-            AI system to optimize contacts, frequencies and profitability in HR and HH channels.
+            AI system to optimize contacts, frequencies and profitability in AR and HR channels.
             Maximize the efficiency of your commercial routes with advanced artificial intelligence.
           </p>
 
@@ -113,7 +113,7 @@ const Index = () => {
                 Evaluate efficiency, median ticket and frequency of each client to optimize contacts
               </p>
               <Badge variant="secondary" className="bg-green-100 text-green-800">
-                HR & HH Channels
+                AR & HR Channels
               </Badge>
             </CardContent>
           </Card>

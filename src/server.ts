@@ -49,14 +49,31 @@ app.post('/api/chat', async (req, res) => {
     let metrics = null;
     let extractedClientId = clientId;
 
-    // Buscar clientId explícito o extraerlo del mensaje
+    // Buscar clientId explícito o extraerlo del mensaje con lógica mejorada
     if (clientId) {
       clientData = await getClientById(clientId);
     } else {
-      const match = message.match(/client(?:e)?[\s:]*([0-9]+)/i);
-      if (match) {
-        extractedClientId = match[1];
-        clientData = await getClientById(extractedClientId);
+      // Múltiples patrones para detectar IDs de cliente
+      const patterns = [
+        /client(?:e)?[\s:]*([0-9]+)/i,           // "client 123" o "cliente 123"
+        /(?:id|ID)[\s:]*([0-9]+)/,               // "ID 123" o "id: 123"
+        /(?:número|numero|number)[\s:]*([0-9]+)/i, // "número 123"
+        /(?:^|\s)([1-9][0-9]{5,8})(?:\s|$)/,     // Números de 6-9 dígitos (formato típico de ID)
+        /(?:código|codigo|code)[\s:]*([0-9]+)/i,  // "código 123"
+        /(?:análisis|analisis|analysis).*?([1-9][0-9]{5,8})/i // "análisis del 123456"
+      ];
+
+      for (const pattern of patterns) {
+        const match = message.match(pattern);
+        if (match) {
+          extractedClientId = match[1];
+          // Verificar que el ID existe antes de usar
+          const testClientData = await getClientById(extractedClientId);
+          if (testClientData) {
+            clientData = testClientData;
+            break;
+          }
+        }
       }
     }
 
@@ -84,12 +101,19 @@ app.post('/api/chat', async (req, res) => {
       console.log('✅ Métricas incluidas en contexto');
     }
 
+    // Agregar contexto adicional sobre la intención del usuario
+    const userIntent = analyzeUserIntent(message);
+    if (userIntent) {
+      context.additionalData = userIntent;
+    }
+
     // Log del contexto
     console.dir({ 
       message, 
       clientId: extractedClientId, 
       hasClientData: !!clientData, 
-      hasMetrics: !!metrics 
+      hasMetrics: !!metrics,
+      userIntent
     }, { depth: null });
 
     // Usar el nuevo asistente profesional
@@ -110,6 +134,48 @@ app.post('/api/chat', async (req, res) => {
     });
   }
 });
+
+// Función auxiliar para analizar la intención del usuario
+function analyzeUserIntent(message: string): string | null {
+  const lowerMessage = message.toLowerCase();
+  
+  // Intenciones relacionadas con clientes y métricas
+  const clientIntents = [
+    'análisis', 'analysis', 'analizar', 'analyze',
+    'rendimiento', 'performance', 'desempeño',
+    'eficiencia', 'efficiency', 'rentabilidad', 'profitability',
+    'ingresos', 'income', 'revenue', 'ventas', 'sales',
+    'frecuencia', 'frequency', 'pedidos', 'orders',
+    'optimización', 'optimization', 'optimización de rutas',
+    'roi', 'retorno', 'return', 'beneficio', 'profit',
+    'costos', 'costs', 'gastos', 'expenses',
+    'visitas', 'visits', 'llamadas', 'calls',
+    'cliente', 'customer', 'clientes', 'customers',
+    'métrica', 'metric', 'métricas', 'metrics',
+    'kpi', 'indicador', 'indicator'
+  ];
+
+  const hasClientIntent = clientIntents.some(intent => lowerMessage.includes(intent));
+  
+  if (hasClientIntent) {
+    return 'User is asking about client metrics, performance, or business analysis';
+  }
+
+  // Detectar preguntas sobre el sistema en general
+  const systemIntents = [
+    'qué puedes hacer', 'what can you do', 'ayuda', 'help',
+    'funciones', 'functions', 'capacidades', 'capabilities',
+    'cómo funciona', 'how does it work', 'explicar', 'explain'
+  ];
+
+  const hasSystemIntent = systemIntents.some(intent => lowerMessage.includes(intent));
+  
+  if (hasSystemIntent) {
+    return 'User is asking about system capabilities or help';
+  }
+
+  return null;
+}
 
 app.get('/api/clients-test', async (req, res) => {
   console.log('Petición recibida en /api/clients-test');

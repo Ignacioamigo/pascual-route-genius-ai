@@ -16,17 +16,18 @@ interface Message {
 }
 
 const SAMPLE_QUERIES = [
-  "Analyze optimization for client 653025",
-  "Which clients have low efficiency?",
-  "Explain estimated savings for client X",
-  "Show clients with median ticket < €80"
+  "Analyze performance of 653025",
+  "ROI analysis for 100006690", 
+  "Show efficiency metrics for 789012",
+  "What are the top performing clients?",
+  "Explain profit margins and optimization opportunities"
 ];
 
 export const ChatInterface = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      content: "Hello! I'm your Pascual optimization assistant. What client or metric would you like to consult? I can help you with efficiency analysis, median ticket, frequency, costs and more.",
+      content: "¡Hola! Soy tu asistente de optimización de Pascual. Puedo ayudarte a analizar el rendimiento de clientes, métricas de eficiencia, ROI, frecuencia de pedidos y oportunidades de optimización. Solo menciona un número de cliente o pregunta sobre métricas específicas.",
       sender: "ai",
       timestamp: new Date()
     }
@@ -101,7 +102,7 @@ export const ChatInterface = () => {
             onClick={() => {
               setMessages([{
                 id: "1",
-                content: "Hello! I'm your Pascual optimization assistant. What client or metric would you like to consult?",
+                content: "¡Hola! Soy tu asistente de optimización de Pascual. Puedo ayudarte a analizar el rendimiento de clientes, métricas de eficiencia, ROI, frecuencia de pedidos y oportunidades de optimización. Solo menciona un número de cliente o pregunta sobre métricas específicas.",
                 sender: "ai",
                 timestamp: new Date()
               }]);
@@ -200,7 +201,7 @@ export const ChatInterface = () => {
           <Input
             value={currentMessage}
             onChange={(e) => setCurrentMessage(e.target.value)}
-            placeholder="Ask about a client, metric or analysis..."
+            placeholder="Pregunta sobre rendimiento, métricas, ROI, o simplemente menciona un número de cliente..."
             className="flex-1"
             disabled={isLoading}
           />
