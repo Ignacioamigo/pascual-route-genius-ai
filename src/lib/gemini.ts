@@ -1,5 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { getClusterStrategy, ClusterStrategy } from "./cluster-strategies";
+import { executeSmartQuery, formatQueryResults, detectQueryPattern } from "./smart-queries";
 
 const apiKey = process.env.GEMINI_API_KEY as string;
 export const genAI = new GoogleGenerativeAI(apiKey);
@@ -143,9 +144,45 @@ export async function askGemini(prompt: string) {
 }
 
 export async function askPascualAssistant(message: string, context: PascualContext = {}) {
+  // 🚀 FIRST: Try to answer with direct SQL queries
+  try {
+    const smartQueryResult = await executeSmartQuery(message);
+    
+    if (smartQueryResult && smartQueryResult.data.length > 0) {
+      console.log('🎯 Smart Query executed:', smartQueryResult.type);
+      console.log('📊 SQL Result:', smartQueryResult.data);
+      
+      // Format the results for direct response
+      const formattedResults = formatQueryResults(smartQueryResult);
+      
+      // Enhance with LLM interpretation if needed
+      const enhancedPrompt = `
+        You are Pascual Route Optimisation Assistant. 
+        
+        A user asked: "${message}"
+        
+        I executed this SQL query and got these results:
+        ${formattedResults}
+        
+        Please provide a brief, professional analysis of these results in ≤800 characters. 
+        Use emojis and plain text (no markdown). Focus on business insights.
+        If these are city statistics, provide percentage insights and comparisons.
+        If these are client rankings, highlight the top performers and key differentiators.
+        
+        Language: English, formal business tone.
+      `;
+      
+      const llmEnhancement = await askGemini(enhancedPrompt);
+      return `${formattedResults}\n\n💡 ANALYSIS:\n${llmEnhancement}`;
+    }
+  } catch (error) {
+    console.log('⚠️ Smart query failed, falling back to LLM:', error);
+  }
+  
+  // 🤖 FALLBACK: Use traditional LLM approach
   const professionalPrompt = buildProfessionalPrompt(message, context);
   console.log('🤖 Professional Prompt:\n', professionalPrompt);
   return await askGemini(professionalPrompt);
 }
 
-export { buildProfessionalPrompt, type PascualContext }; 
+export { buildProfessionalPrompt, type PascualContext, getClusterStrategy }; 
