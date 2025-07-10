@@ -71,10 +71,14 @@ export const QUERY_PATTERNS = {
   // Median ticket queries BY CITY (SPECIFIC - FIRST)
   HIGHEST_MEDIAN_TICKET_BY_CITY: {
     patterns: [
-      /clients with (?:the )?(?:better|best|highest) median ticket in ([a-záéíóúüñ\w]+)/i,
+      /clients with (?:the )?(?:better|best|highest|biggest) median ticket in ([a-záéíóúüñ\w]+)/i,
+      /client with (?:the )?(?:better|best|highest|biggest) median ticket in ([a-záéíóúüñ\w]+)/i,
+      /(?:better|best|highest|biggest) median ticket in ([a-záéíóúüñ\w]+)/i,
       /mejor (?:ticket medio|median ticket) en ([a-záéíóúüñ\w]+)/i,
       /highest ticket in ([a-záéíóúüñ\w]+)/i,
-      /clientes con mejor ticket en ([a-záéíóúüñ\w]+)/i
+      /biggest ticket in ([a-záéíóúüñ\w]+)/i,
+      /clientes con mejor ticket en ([a-záéíóúüñ\w]+)/i,
+      /median ticket in ([a-záéíóúüñ\w]+)/i
     ],
     sql: `
       SELECT 
@@ -99,11 +103,15 @@ export const QUERY_PATTERNS = {
   // Median ticket queries GLOBAL (GENERAL - AFTER)
   HIGHEST_MEDIAN_TICKET_GLOBAL: {
     patterns: [
-      /clients with (?:the )?(?:better|best|highest) median ticket/i,
+      /clients with (?:the )?(?:better|best|highest|biggest) median ticket/i,
+      /client with (?:the )?(?:better|best|highest|biggest) median ticket/i,
+      /(?:better|best|highest|biggest) median ticket/i,
       /mejor (?:ticket medio|median ticket)/i,
       /highest ticket/i,
+      /biggest ticket/i,
       /clientes con mejor ticket/i,
-      /best median ticket/i
+      /best median ticket/i,
+      /median ticket/i
     ],
     sql: `
       SELECT 
@@ -265,7 +273,11 @@ export const QUERY_PATTERNS = {
       /statistics for ([a-záéíóúüñ\w]+)/i,
       /datos de ([a-záéíóúüñ\w]+)/i,
       /([a-záéíóúüñ\w]+) city stats/i,
-      /resumen de ([a-záéíóúüñ\w]+)/i
+      /resumen de ([a-záéíóúüñ\w]+)/i,
+      /tell me info about ([a-záéíóúüñ\w]+)/i,
+      /information about ([a-záéíóúüñ\w]+)/i,
+      /info about ([a-záéíóúüñ\w]+)/i,
+      /about ([a-záéíóúüñ\w]+)/i
     ],
     sql: `
       SELECT 
@@ -298,6 +310,12 @@ export function detectQueryPattern(message: string): { pattern: any; params: str
 
 // Execute smart query
 export async function executeSmartQuery(message: string): Promise<SmartQueryResult | null> {
+  // Skip smart queries if message contains client IDs (numbers)
+  if (/\b\d{6,}\b/.test(message)) {
+    console.log('⚠️ Message contains client ID numbers, skipping smart query');
+    return null;
+  }
+  
   const detection = detectQueryPattern(message);
   
   if (!detection) {

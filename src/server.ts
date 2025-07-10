@@ -45,11 +45,13 @@ app.get('/api/clients', async (req, res) => {
 app.post('/api/chat', async (req, res) => {
   const { message, clientId } = req.body;
   
+  // Declare variables outside try block for error handling
+  let clientData = null;
+  let metrics = null;
+  let extractedClientId = clientId;
+  let context: PascualContext = {};
+  
   try {
-    let clientData = null;
-    let metrics = null;
-    let extractedClientId = clientId;
-
     // Buscar clientId explícito o extraerlo del mensaje con lógica mejorada
     if (clientId) {
       clientData = await getClientById(clientId);
@@ -90,7 +92,7 @@ app.post('/api/chat', async (req, res) => {
     }
 
     // Construir contexto para el asistente profesional
-    const context: PascualContext = {};
+    context = {};
     
     if (clientData) {
       context.clientData = clientData;
@@ -139,9 +141,38 @@ app.post('/api/chat', async (req, res) => {
     
   } catch (err) {
     console.error('🔴 Error en chat profesional:', err);
-    res.status(500).json({ 
-      error: 'Error processing professional chat request', 
-      details: err instanceof Error ? err.message : err 
+    
+    // Handle specific Google Gemini errors gracefully
+    if (err instanceof Error && err.message?.includes('overloaded')) {
+      return res.json({
+        answer: "I'm experiencing high demand right now. Please try again in a few minutes. The Google Gemini servers are temporarily overloaded. 🔄",
+        clientId: extractedClientId,
+        hasClientData: !!clientData,
+        hasMetrics: !!metrics,
+        hasClusterStrategy: !!context.clusterStrategy,
+        clusterLabel: context.clusterStrategy?.label
+      });
+    }
+    
+    if (err instanceof Error && err.message?.includes('quota')) {
+      return res.json({
+        answer: "API quota limit reached. Please try again later or contact support. 📊",
+        clientId: extractedClientId,
+        hasClientData: !!clientData,
+        hasMetrics: !!metrics,
+        hasClusterStrategy: !!context.clusterStrategy,
+        clusterLabel: context.clusterStrategy?.label
+      });
+    }
+    
+    // Generic error fallback
+    res.json({
+      answer: "I'm experiencing technical difficulties. Please try again in a moment. 🔧",
+      clientId: extractedClientId,
+      hasClientData: !!clientData,
+      hasMetrics: !!metrics,
+      hasClusterStrategy: !!context.clusterStrategy,
+      clusterLabel: context.clusterStrategy?.label
     });
   }
 });
